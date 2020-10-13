@@ -1,9 +1,9 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 	<div id="new-post" onload="init();">
-		<form action="create" method="post">
-			{% csrf_token %}
+		<form id="create-post">
 			<textarea id="new-post-content" name="content" placeholder="What's happening?" rows="1" autofocus></textarea><br>
 			<button id="new-post-btn" type="submit">Post</button>
 		</form>
@@ -17,4 +17,7 @@
     		<p class="post-liked">{{ post.liked.all.count }}</p>
     	</div>
     {% endfor %}
+{% endblock %}
+{% block script %}
+	<script src="{% static 'network/inbox.js' %}"></script>
 {% endblock %}

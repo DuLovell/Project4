@@ -1,14 +1,19 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import date
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .models import User, Post
 
 
 def index(request):
+    
     posts = Post.objects.all().order_by("-created")
     current_year = date.today().year
     return render(request, "network/index.html", {
@@ -16,6 +21,19 @@ def index(request):
         "current_year": current_year,
         })
 
+
+@csrf_exempt
+#@login_required
+def create(request):
+    if request.user.is_authenticated:
+        data = json.loads(request.body)
+        user = request.user
+        content = data.get("content", "")
+        post = Post(user=user, text=content)
+        post.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return HttpResponse("Anything")
 
 def login_view(request):
     if request.method == "POST":
@@ -67,3 +85,5 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
