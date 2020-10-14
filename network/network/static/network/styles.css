@@ -105,7 +105,7 @@
 	width: 15%;
 	height: 32px;
 }
-#new-post-btn:hover {
+#new-post-btn:hover:enabled {
 	background-color: #88bed1;
 }
 #new-post-btn:focus {

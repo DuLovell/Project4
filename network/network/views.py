@@ -22,6 +22,11 @@ def index(request):
         })
 
 
+def if_authenticated(request):
+    if request.user.is_authenticated:
+        return JsonResponse("True", safe=False)
+    return JsonResponse("False", safe=False)
+
 @csrf_exempt
 #@login_required
 def create(request):
@@ -32,8 +37,8 @@ def create(request):
         post = Post(user=user, text=content)
         post.save()
         return HttpResponseRedirect(reverse("index"))
-    else:
-        return HttpResponse("Anything")
+    
+    return HttpResponse("Anything")
 
 def login_view(request):
     if request.method == "POST":
