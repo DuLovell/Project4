@@ -11,13 +11,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	
 
-
-
-
 })
 
 function count_like(post) {
-	console.log(post);
+	/*console.log(post.children[3]);*/
+	
+	const username = post.children[0].children[0].innerHTML;
+	const content = post.children[1].innerHTML;
+	const created_date = post.children[0].children[1].innerHTML;
+
+	fetch('/manage_like', {
+		method: 'POST',
+		body: JSON.stringify({
+			username: username,
+			content: content,
+			created_date: created_date
+		})
+	})
+	.then(response => response.json())
+	.then(answer => {
+		post.children[3].innerHTML = answer;
+	})
 }
 
 function create_post() {
@@ -31,6 +45,7 @@ function create_post() {
 }
 
 function load_index(request) {
+	
 	fetch('/if_authenticated', {
 			method: 'GET',
 		})

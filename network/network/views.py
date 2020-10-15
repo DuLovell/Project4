@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Post
+from .models import User, Post, Like
 
 
 def index(request):
@@ -22,23 +22,6 @@ def index(request):
         })
 
 
-def if_authenticated(request):
-    if request.user.is_authenticated:
-        return JsonResponse("True", safe=False)
-    return JsonResponse("False", safe=False)
-
-@csrf_exempt
-#@login_required
-def create(request):
-    if request.user.is_authenticated:
-        data = json.loads(request.body)
-        user = request.user
-        content = data.get("content", "")
-        post = Post(user=user, text=content)
-        post.save()
-        return HttpResponseRedirect(reverse("index"))
-    
-    return HttpResponse("Anything")
 
 def login_view(request):
     if request.method == "POST":
@@ -91,4 +74,53 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+def if_authenticated(request):
+    if request.user.is_authenticated:
+        return JsonResponse("True", safe=False)
+    return JsonResponse("False", safe=False)
 
+@csrf_exempt
+def create(request):
+    if request.user.is_authenticated:
+        data = json.loads(request.body)
+        user = request.user
+        content = data.get("content", "")
+        post = Post(user=user, text=content)
+        post.save()
+        return HttpResponseRedirect(reverse("index"))
+    
+    return HttpResponse("Anything")
+
+@csrf_exempt
+def manage_like(request):
+    
+
+    data = json.loads(request.body)
+    post_author = data.get("username", "")
+    post_content = data.get("content", "")
+    post_created = data.get("created_date", "")
+
+    post = Post.objects.filter(text=post_content)[0]
+    post_likes = post.likes.filter(user=request.user)
+    if not post_likes:
+        new_like = Like(user=request.user, post=post)
+        new_like.save()
+        
+        post.liked.add(request.user)
+
+        likes = post.likes.count()
+        
+        return JsonResponse(f"{likes}", safe=False)
+
+    else:
+        old_like = post.likes.get(user=request.user)
+        old_like.delete()
+        
+        post.liked.remove(request.user)
+        
+        likes = post.likes.count()
+
+        return JsonResponse(f"{likes}", safe=False)
+#TODO сделать динамичное обновление лайков  
+
+    

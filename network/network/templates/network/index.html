@@ -13,7 +13,11 @@
     	<div class="post">
     		<p class="post-info"><span id="post-user">{{ post.user }}</span>  <span id="post-created">{{ post.created.date }} </span></p>
     		<p class="post-content">{{ post.text }}</p>
-    		<div class="heart" tabindex="-1"></div>
+    		{% if user.is_authenticated %}
+    			<div class="heart" tabindex="-1"></div>
+    		{% else %}
+    			<a href="/login"><div class="heart" tabindex="-1"></div></a>
+    		{% endif %}
     		<p class="post-liked">{{ post.liked.all.count }}</p>
     	</div>
     {% endfor %}

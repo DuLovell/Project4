@@ -6,6 +6,7 @@ class User(AbstractUser):
     pass
 
 class Post(models.Model):
+	id = models.AutoField(primary_key=True)
 	user = models.CharField(max_length=32)
 	text = models.TextField(max_length=280)
 	liked = models.ManyToManyField(User, blank=True, related_name="post_liked")
