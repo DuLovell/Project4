@@ -6,8 +6,7 @@ class User(AbstractUser):
     pass
 
 class Post(models.Model):
-	id = models.AutoField(primary_key=True)
-	user = models.CharField(max_length=32)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
 	text = models.TextField(max_length=280)
 	liked = models.ManyToManyField(User, blank=True, related_name="post_liked")
 	created = models.DateTimeField(auto_now_add=True)

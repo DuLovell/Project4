@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from datetime import date
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -15,10 +15,10 @@ from .models import User, Post, Like
 def index(request):
     
     posts = Post.objects.all().order_by("-created")
-    current_year = date.today().year
+
+    now_date = datetime.now()
     return render(request, "network/index.html", {
         "posts": posts,
-        "current_year": current_year,
         })
 
 
@@ -120,7 +120,12 @@ def manage_like(request):
         
         likes = post.likes.count()
 
-        return JsonResponse(f"{likes}", safe=False)
-#TODO сделать динамичное обновление лайков  
+        return JsonResponse(f"{likes}", safe=False)  
 
     
+def profile(request, username):
+    user = User.objects.get(username=username)
+    return render(request, "network/profile.html", {
+        "profile": user,
+        "posts": user.posts.all().order_by("-created"),
+        })
