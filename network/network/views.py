@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Post, Like
+from .models import User, Post, Follow, Like
 
 
 def index(request):
@@ -122,10 +122,41 @@ def manage_like(request):
 
         return JsonResponse(f"{likes}", safe=False)  
 
+@csrf_exempt 
+def manage_follow(request):
+    data = json.loads(request.body)
+    current_user = User.objects.get(username=request.user)
+    profile_user = User.objects.get(username=data.get('profile_name', "").strip())
     
+    if profile_user.all_followers.filter(followers=current_user):
+        old_follow_obj = Follow.objects.get(user_to_follow=profile_user)
+        old_follow_obj.followers.remove(current_user)
+        return JsonResponse("Follow", safe=False)
+    else:
+        try:
+            old_follow_obj = Follow.objects.get(user_to_follow=profile_user)
+            old_follow_obj.followers.add(current_user)
+        except Follow.DoesNotExist:
+            follow_obj = Follow(user_to_follow=profile_user)
+            follow_obj.save()
+            follow_obj.followers.add(current_user)
+            pass
+            
+        return JsonResponse("Unfollow", safe=False)
+
+  
 def profile(request, username):
     user = User.objects.get(username=username)
+
+    if user.all_followers.filter(followers=request.user):
+        is_followed = True
+    else:
+        is_followed = False
+    
     return render(request, "network/profile.html", {
         "profile": user,
         "posts": user.posts.all().order_by("-created"),
+        "current_user": request.user,
+        "is_followed": is_followed,
         })
+

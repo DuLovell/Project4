@@ -14,5 +14,6 @@ urlpatterns = [
     path("create_post", views.create, name="create"),
     path("if_authenticated", views.if_authenticated, name="if_authenticated"),
     path("manage_like", views.manage_like, name="manage_like"),
+    path("manage_follow", views.manage_follow, name="manage_follow"),
 
 ]

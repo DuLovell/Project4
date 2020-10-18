@@ -20,3 +20,14 @@ class Like(models.Model):
 
 	def __str__(self):
 		return f"{self.user} liked {self.post}"
+
+class Follow(models.Model):
+	user_to_follow = models.ForeignKey(User, on_delete=models.CASCADE, related_name="all_followers")
+	followers = models.ManyToManyField(User, blank=True)
+
+	def __str__(self):
+		user_str = ""
+		for user in self.followers.all():
+			user_str += user.username + ", "
+		user_str = user_str.rstrip(", ")
+		return f"{user_str} following {self.user_to_follow}"
