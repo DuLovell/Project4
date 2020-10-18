@@ -131,7 +131,9 @@ def manage_follow(request):
     if profile_user.all_followers.filter(followers=current_user):
         old_follow_obj = Follow.objects.get(user_to_follow=profile_user)
         old_follow_obj.followers.remove(current_user)
-        return JsonResponse("Follow", safe=False)
+
+        profile_followers = profile_user.follows.all().count()
+        return JsonResponse(["Follow", profile_followers], safe=False)
     else:
         try:
             old_follow_obj = Follow.objects.get(user_to_follow=profile_user)
@@ -140,13 +142,15 @@ def manage_follow(request):
             follow_obj = Follow(user_to_follow=profile_user)
             follow_obj.save()
             follow_obj.followers.add(current_user)
-            pass
-            
-        return JsonResponse("Unfollow", safe=False)
+
+        profile_followers = profile_user.follows.all().count() 
+        return JsonResponse(["Unfollow", profile_followers], safe=False)
 
   
 def profile(request, username):
     user = User.objects.get(username=username)
+
+
 
     if user.all_followers.filter(followers=request.user):
         is_followed = True
