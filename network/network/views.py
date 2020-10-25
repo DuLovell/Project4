@@ -132,7 +132,7 @@ def manage_follow(request):
         old_follow_obj = Follow.objects.get(user_to_follow=profile_user)
         old_follow_obj.followers.remove(current_user)
 
-        profile_followers = profile_user.follows.all().count()
+        profile_followers = profile_user.all_followers.first().followers.count()
         return JsonResponse(["Follow", profile_followers], safe=False)
     else:
         try:
@@ -143,13 +143,14 @@ def manage_follow(request):
             follow_obj.save()
             follow_obj.followers.add(current_user)
 
-        profile_followers = profile_user.follows.all().count() 
+        profile_followers = profile_user.all_followers.first().followers.count() 
         return JsonResponse(["Unfollow", profile_followers], safe=False)
 
   
 def profile(request, username):
     user = User.objects.get(username=username)
 
+    user_following = Follow.objects.all()
 
 
     if user.all_followers.filter(followers=request.user):
@@ -162,5 +163,6 @@ def profile(request, username):
         "posts": user.posts.all().order_by("-created"),
         "current_user": request.user,
         "is_followed": is_followed,
+        "user_following": user_following,
         })
 
