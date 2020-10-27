@@ -51,6 +51,7 @@ a {
 }
 #post-user:hover {
 	text-decoration: underline;
+	color: inherit;
 }
 
 
