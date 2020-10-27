@@ -178,3 +178,18 @@ def profile(request, username):
         "user_following": user_following,
         })
 
+@csrf_exempt
+def edit_post(request):
+    data = json.loads(request.body)
+
+    post_author = data.get("username", "")
+    new_content = data.get("new_content")
+    old_content = data.get("old_content")
+    post_created = data.get("created_date", "")
+
+    post = Post.objects.get(text=old_content)
+
+    post.text = new_content
+    post.save()
+
+    return JsonResponse(f"{new_content}", safe=False)

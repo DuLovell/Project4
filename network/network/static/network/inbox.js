@@ -7,10 +7,49 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
+	const posts_edit = document.querySelectorAll(".post-edit");
+	for (let i = 0; i < posts_edit.length; i++ ) {
+		posts_edit[i].onclick = function() {
+			posts_edit[i].disabled = true;
+			edit(posts_edit[i].parentNode);
+			posts_edit[i].disabled = false;
+		}
+	}
+
 	load_index();
 	
 
 })
+
+function edit(post) {
+
+
+	const username = post.children[0].children[0].innerHTML;
+	var post_text = post.children[1].innerHTML;
+	var content = post.children[1];
+	const created_date = post.children[0].children[1].innerHTML;
+
+	content.innerHTML = `<textarea id="edit-area">${ content.innerHTML }</textarea>
+	<button style="position: absolute; margin: 24px 10px;" id="edit-btn">Edit</button>`;
+	document.getElementById("edit-btn").onclick = function() {
+		console.log(post.children[4]);
+		fetch('/edit_post', {
+			method: 'POST',
+			body: JSON.stringify({
+				username: username,
+				old_content: post_text,
+				new_content: document.querySelector("#edit-area").value,
+				created_date: created_date
+			})
+		})
+		.then(response => response.json())
+		.then(answer => {
+			content.innerHTML = answer;
+		})
+	}
+
+
+}
 
 function count_like(post) {
 	/*console.log(post.children[3]);*/
@@ -78,6 +117,7 @@ function load_index(request) {
 				document.querySelector('#create-post').onsubmit = function() {
 					create_post();
 				}
+
 			}
 			else {
 				document.querySelector('#new-post').style.display = 'none';

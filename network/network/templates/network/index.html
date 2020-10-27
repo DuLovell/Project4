@@ -10,12 +10,14 @@
 {% endblock %}
 
 {% block body %}
-	<div id="new-post" onload="init();">
-		<form id="create-post">
-			<textarea id="new-post-content" name="content" placeholder="What's happening?" rows="1" autofocus></textarea><br>
-			<button id="new-post-btn" type="submit">Post</button>
-		</form>
-	</div>
+	{% if user.is_authenticated %}
+		<div id="new-post" onload="init();">
+			<form id="create-post">
+				<textarea id="new-post-content" name="content" placeholder="What's happening?" rows="1" autofocus></textarea><br>
+				<button id="new-post-btn" type="submit">Post</button>
+			</form>
+		</div>
+	{% endif %}
 	<br><hr>
     {% for post in posts %}
     	<div class="post">
@@ -27,6 +29,9 @@
     			<a href="/login"><div class="heart" tabindex="-1"></div></a>
     		{% endif %}
     		<p class="post-liked">{{ post.liked.all.count }}</p>
+    		{% if post.user == request.user %}
+    			<p class="post-edit"><span id="post-edit-btn">Edit</span></p>
+    		{% endif %}
     	</div>
     {% endfor %}
 {% endblock %}

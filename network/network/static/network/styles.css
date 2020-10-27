@@ -54,6 +54,17 @@ a {
 	color: inherit;
 }
 
+#post-edit-btn {
+	color: blue;
+}
+#post-edit-btn:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+.post-edit {
+	margin-top: 23px;
+
+}
 
 #post-created {
 	font-weight: normal;
