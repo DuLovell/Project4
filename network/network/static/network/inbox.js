@@ -66,9 +66,11 @@ function load_index(request) {
 				content.onkeyup = () => {
 					if (content.value.length > 0) {
 						submit.disabled = false;
+						submit.style.background = "#88bed1";
 					}
 					else {
 						submit.disabled = true;
+						submit.style.background = "#ADD8E6";
 					}
 				}
 
