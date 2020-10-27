@@ -1,6 +1,14 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
+{% block style %}
+	<style>
+		#all_posts-btn {
+			font-weight: bold;
+		}
+	</style>
+{% endblock %}
+
 {% block body %}
 	<div id="new-post" onload="init();">
 		<form id="create-post">
