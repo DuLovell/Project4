@@ -15,12 +15,24 @@ from .models import User, Post, Follow, Like
 def index(request):
     
     posts = Post.objects.all().order_by("-created")
+    
 
     now_date = datetime.now()
     return render(request, "network/index.html", {
         "posts": posts,
         })
 
+def following_index(request):
+    following_set = Post.objects.none()
+    follow_obj_set = User.objects.get(username=request.user).follows.all()
+    
+    for follow in follow_obj_set:
+        following_set = ( following_set | follow.user_to_follow.posts.all() ).order_by("-created")
+    
+
+    return render(request, "network/following.html", {
+        "following_set": following_set,
+        })
 
 
 def login_view(request):
