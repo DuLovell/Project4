@@ -19,7 +19,7 @@
 		</div>
 	{% endif %}
 	<br><hr>
-    {% for post in posts %}
+    {% for post in current_page %}
     	<div class="post">
     		<p class="post-info"><a id="post-user" href="{% url 'profile' post.user %}">{{ post.user }}</a>  <span id="post-created">{{ post.created.date }}</span></p>
     		<p class="post-content">{{ post.text }}</p>
@@ -34,6 +34,19 @@
     		{% endif %}
     	</div>
     {% endfor %}
+
+    <nav aria-label="Page navigation example" style="float: right; margin-top: 5px;">
+  		<ul class="pagination">
+  			{% if current_page.has_previous %}
+	  			<li class="page-item"><a class="page-link" href="{{ current_page.previous_page_number }}">Previous</a></li>
+	  		{% endif %}
+		    {% for number in pages_number %}
+		    	<li class="page-item"><a class="page-link" href="{{number}}">{{number}}</a></li>
+		    {% endfor %}
+		    {% if current_page.has_next %}
+			    <li class="page-item"><a class="page-link" href="{{current_page.next_page_number}}">Next</a></li>
+			{% endif %}
+  </ul>
 {% endblock %}
 {% block script %}
 	<script src="{% static 'network/inbox.js' %}"></script>

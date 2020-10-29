@@ -31,7 +31,7 @@
     <body>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'index' %}">Network</a>
+            <a class="navbar-brand" href="{% url 'index' num=1 %}">Network</a>
           
             <div>
               <ul class="navbar-nav mr-auto">
@@ -41,7 +41,7 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link" id="all_posts-btn" href="{% url 'index' %}">All Posts</a>
+                  <a class="nav-link" id="all_posts-btn" href="{% url 'index' num=1 %}">All Posts</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">

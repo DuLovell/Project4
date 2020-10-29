@@ -8,18 +8,26 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 from .models import User, Post, Follow, Like
 
 
-def index(request):
+def index(request, num):
     
     posts = Post.objects.all().order_by("-created")
+
+    posts_pages = Paginator(posts, 10)
+
+    current_page = posts_pages.page(num)
     
 
     now_date = datetime.now()
     return render(request, "network/index.html", {
         "posts": posts,
+        "posts_pages": posts_pages,
+        "current_page": current_page,
+        "pages_number": range(1, posts_pages.num_pages + 1),
         })
 
 def following_index(request):
@@ -82,7 +90,7 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("index", args={"num": 1}))
     else:
         return render(request, "network/register.html")
 
@@ -99,7 +107,7 @@ def create(request):
         content = data.get("content", "")
         post = Post(user=user, text=content)
         post.save()
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("index", args={"num": 1}))
     
     return HttpResponse("Anything")
 
