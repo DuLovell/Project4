@@ -30,16 +30,21 @@ def index(request, num):
         "pages_number": range(1, posts_pages.num_pages + 1),
         })
 
-def following_index(request):
+def following_index(request, num):
     following_set = Post.objects.none()
     follow_obj_set = User.objects.get(username=request.user).follows.all()
     
     for follow in follow_obj_set:
         following_set = ( following_set | follow.user_to_follow.posts.all() ).order_by("-created")
     
+    posts_pages = Paginator(following_set, 10)
+    current_page = posts_pages.page(num)
 
     return render(request, "network/following.html", {
         "following_set": following_set,
+        "posts_pages": posts_pages,
+        "current_page": current_page,
+        "pages_number": range(1, posts_pages.num_pages + 1),
         })
 
 
@@ -167,7 +172,7 @@ def manage_follow(request):
         return JsonResponse(["Unfollow", profile_followers], safe=False)
 
   
-def profile(request, username):
+def profile(request, username, num):
     user = User.objects.get(username=username)
 
     user_following = Follow.objects.all()
@@ -177,13 +182,21 @@ def profile(request, username):
         is_followed = True
     else:
         is_followed = False
+
+    posts = user.posts.all().order_by("-created")
+
+    posts_pages = Paginator(posts, 10)
+    current_page = posts_pages.page(num)
     
     return render(request, "network/profile.html", {
         "profile": user,
-        "posts": user.posts.all().order_by("-created"),
         "current_user": request.user,
         "is_followed": is_followed,
         "user_following": user_following,
+        "posts": posts,
+        "posts_pages": posts_pages,
+        "current_page": current_page,
+        "pages_number": range(1, posts_pages.num_pages + 1),
         })
 
 @csrf_exempt

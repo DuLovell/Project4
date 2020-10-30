@@ -37,7 +37,7 @@
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user.username %}" id="profile-btn">{{ user.username }}</a>
+                        <a class="nav-link" href="{% url 'profile' username=user.username num=1 %}" id="profile-btn">{{ user.username }}</a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -45,7 +45,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" id="following-btn" href="{% url 'following' %}">Following</a>
+                        <a class="nav-link" id="following-btn" href="{% url 'following' num=1 %}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

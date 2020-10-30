@@ -21,7 +21,7 @@
 	<br><hr>
     {% for post in current_page %}
     	<div class="post">
-    		<p class="post-info"><a id="post-user" href="{% url 'profile' post.user %}">{{ post.user }}</a>  <span id="post-created">{{ post.created.date }}</span></p>
+    		<p class="post-info"><a id="post-user" href="{% url 'profile' username=post.user num=1 %}">{{ post.user }}</a>  <span id="post-created">{{ post.created.date }}</span></p>
     		<p class="post-content">{{ post.text }}</p>
     		{% if user.is_authenticated %}
     			<div class="heart" tabindex="-1"></div>
@@ -46,7 +46,7 @@
 		    {% if current_page.has_next %}
 			    <li class="page-item"><a class="page-link" href="{{current_page.next_page_number}}">Next</a></li>
 			{% endif %}
-  </ul>
+  		</ul>
 {% endblock %}
 {% block script %}
 	<script src="{% static 'network/inbox.js' %}"></script>

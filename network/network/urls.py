@@ -8,8 +8,8 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path("accounts/<str:username>", views.profile, name="profile"),
-    path("following", views.following_index, name="following"),
+    path("accounts/<str:username>/<int:num>", views.profile, name="profile"),
+    path("following/<int:num>", views.following_index, name="following"),
 
     #API Routes
     path("create_post", views.create, name="create"),
