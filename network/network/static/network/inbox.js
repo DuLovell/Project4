@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	const posts_edit = document.querySelectorAll(".post-edit");
 	for (let i = 0; i < posts_edit.length; i++ ) {
 		posts_edit[i].onclick = function() {
-			posts_edit[i].disabled = true;
+			
 			edit(posts_edit[i].parentNode);
-			posts_edit[i].disabled = false;
+			this.disabled = false;
 		}
 	}
 
@@ -32,7 +32,6 @@ function edit(post) {
 	content.innerHTML = `<textarea id="edit-area">${ content.innerHTML }</textarea>
 	<button style="position: absolute; margin: 24px 10px;" id="edit-btn">Edit</button>`;
 	document.getElementById("edit-btn").onclick = function() {
-		console.log(post.children[4]);
 		fetch('/edit_post', {
 			method: 'POST',
 			body: JSON.stringify({
