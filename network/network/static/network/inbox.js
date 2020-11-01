@@ -30,7 +30,7 @@ function edit(post) {
 	const created_date = post.children[0].children[1].innerHTML;
 
 	content.innerHTML = `<textarea id="edit-area">${ content.innerHTML }</textarea>
-	<button style="position: absolute; margin: 24px 10px;" id="edit-btn">Edit</button>`;
+	<button style="position: absolute; margin: 24px 10px;" id="edit-btn">Save</button>`;
 	document.getElementById("edit-btn").onclick = function() {
 		fetch('/edit_post', {
 			method: 'POST',
